@@ -1,39 +1,38 @@
-# 🚀 AI-Driven BDD Pipeline with Autoformalization
-> **Kaggle AI Agents: Intensive Vibe Coding Capstone Project Submission**
+# 🚀 AI-Driven BDD Pipeline with Formal Autoformalization
+> **Kaggle AI Agents: Intensive Capstone Project Submission**
 
-An automated, multi-agent AI pipeline that translates natural language **User Stories** into mathematically verified, edge-case-proof **Cucumber/Gherkin acceptance tests**.
+An automated, multi-agent pipeline that translates natural language **User Stories** into mathematically verified, edge-case-proof **Cucumber/Gherkin acceptance tests**. 
 
-To eliminate LLM hallucinations, logic gaps, and contradictions in business requirements, the pipeline introduces **Dafny** (an SMT solver-backed formal verification language) as an intermediate compiler-validated verification layer.
+To eliminate LLM hallucinations, logic gaps, and contradictions in business requirements, the pipeline introduces **Dafny** (an SMT solver-backed formal verification language) as a compiler-validated intermediate representation layer.
 
 ---
 
-## 📖 1. The Pitch: Problem, Solution & Value
+## 📋 1. Executive Summary & Value Proposition
 
-### The Problem
-Traditional Behavior-Driven Development (BDD) relies on QA engineers translating business requirements (User Stories) into Gherkin feature files manually. This process is prone to:
-1. **Ambiguity and Gaps**: Edge cases and boundary conditions are frequently missed.
-2. **Logical Contradictions**: Business rules that conflict are not caught until late-stage integration.
-3. **LLM Hallucinations**: Standard AI generators write syntactically correct tests that test incorrect, unverified, or physically impossible system states.
+### The Problem Statement
+Traditional Behavior-Driven Development (BDD) relies on manual translation of business requirements into Gherkin feature files. This manual process is prone to:
+1. **Ambiguity & Logical Gaps**: Boundary conditions and complex edge cases are frequently overlooked.
+2. **Requirements Contradictions**: Conflicting business rules often remain undetected until late-stage integration.
+3. **Generative Hallucinations**: Standard AI generators write syntactically correct tests that test incorrect, unverified, or physically impossible system states.
 
-### The Solution
-A formal verification pipeline orchestrated by Google's **Agent Development Kit (ADK) 2.0**.
+### The Solution: Formal Autoformalization
+An automated verification pipeline orchestrated by Google's **Agent Development Kit (ADK) 2.0**:
 * **Phase 1 (Autoformalization)**: Translates natural language requirements into a formal mathematical model in Dafny.
-* **Phase 2 (Self-Correction Loop)**: Compiles and verifies the model using the local Dafny verifier. If logical bugs or syntax errors are detected, a self-correction agent loop interprets the logs and rewrites the specification until it is mathematically proven.
-* **Phase 3 (Strict BDD Generation)**: Directly maps the proven state space, preconditions, and postconditions to Cucumber `Given/When/Then` scenarios.
-* **Phase 4 (Human-in-the-Loop Mapping & Verification)**: Matches generated Gherkin steps against the Spanner/SQLite Graph. 
-  1. **Step Reuse Trajectory**: Reuses existing definitions to avoid duplicates.
-  2. **Auto-Generate & Vibe Diff**: Scaffolds new stubs via `ruby-step-scaffolder`, translates changes to a plain-English **Vibe Diff**, and pauses for explicit human consent before committing.
-  3. **Auto-Pruning & Telemetry**: Automatically calculates **Step Reuse Coverage** metrics and prunes **orphan Ruby definitions** (definitions with no step bindings) from the Spanner graph.
+* **Phase 2 (Formal Verification Loop)**: Compiles and verifies the model using the Dafny verifier. If logical bugs or syntax errors are detected, a self-correction agent loop interprets the compiler diagnostics and rewrites the specification until it is mathematically proven.
+* **Phase 3 (Acceptance Test Generation)**: Maps the proven state space, preconditions, and postconditions directly to Cucumber `Given/When/Then` scenarios.
+* **Phase 4 (Continuous Ingestion & Graph Mapping)**: Binds Gherkin scenarios to Spanner Graph nodes. Unmapped steps trigger an Evaluator Quorum consensus gate that performs regex expansion, scaffolds Ruby stubs, computes step-reuse metrics, and prunes orphaned graph definitions.
 
-### Value & Innovation
-By enforcing mathematical proof of correctness *before* writing tests, we ensure that:
-* Every BDD scenario is logically sound.
-* 100% of the boundary limits (e.g. daily limits, positive balances) are tested and proven.
-* Hallucinations are prevented by utilizing compilers and SMT verifiers as a hard guardrail.
+### Key Innovations & Value
+By enforcing mathematical proof of correctness *before* test generation, this pipeline:
+* **Guarantees Logical Soundness**: Every generated BDD scenario is backed by an SMT-proven model.
+* **Prevents Hallucinations**: Utilizes compiler feedback and Z3 theorem solvers as strict, deterministic guardrails.
+* **Optimizes Reusability**: Incorporates graph database traversals to maximize step definition reuse and automatically eliminate dead code.
 
 ---
 
-## 🏗️ 2. Overall Agent Architecture
+## 🏗️ 2. System Architecture & Verification Flow
+
+The pipeline orchestrates multiple specialized agents through a compiler-in-the-loop state machine:
 
 ```mermaid
 graph TD
@@ -41,53 +40,52 @@ graph TD
     Phase1 -->|Autoformalizer Agent| Spec[Dafny Formal Spec .dfy]
     Spec --> Phase2[Phase 2: Verification Loop]
     Phase2 --> Verifier{Dafny Verifier & Z3}
-    Verifier -- Fail (Errors) --> Fix[Corrector Agent]
-    Fix -->|Self-Correction| Spec
-    Verifier -- Success (Proven) --> Phase3[Phase 3: Test Generation]
+    Verifier -- Fail (Compiler Errors) --> Fix[Corrector Agent]
+    Fix -->|Self-Correction Checklist| Spec
+    Verifier -- Success (Mathematically Proven) --> Phase3[Phase 3: Test Generation]
     Phase3 -->|Gherkin Generator Agent| Gherkin[Gherkin Feature File .feature]
-    Gherkin --> Phase4[Phase 4: Human-in-the-Loop Mapping]
-    Phase4 -->|Spanner/SQLite Graph| Verification[Proven & Mapped Cucumber Tests]
+    Gherkin --> Phase4[Phase 4: Graph Binding]
+    Phase4 -->|Spanner Graph & Quorum| Verification[Verified Acceptance Tests]
 ```
 
 ---
 
-## 🎓 3. Demonstration of Key Course Concepts
+## 🎓 3. Core Agent Framework Design & Integrations
 
-In accordance with the Capstone Project evaluation rubric, this project demonstrates five (5) key concepts:
+This project implements five key architectural concepts under the Kaggle Capstone evaluation criteria:
 
 ### 1. Multi-Agent System (ADK 2.0)
-* **Where**: [pipeline_adk.py](pipeline_adk.py)
-* **Details**: We use **ADK 2.0 Dynamic Workflows** (`async/await` orchestration) to coordinate three specialized agents:
+* **Location**: [pipeline_adk.py](pipeline_adk.py)
+* **Details**: Coordinates three specialized agents using ADK 2.0 dynamic workflows (`async/await` orchestration):
   1. `autoformalizer`: Translates User Stories to formal state machines.
   2. `corrector`: Analyzes compiler diagnostics and repairs safety postconditions.
   3. `gherkin_generator`: Maps proven states to Cucumber scenarios.
-* All agents enforce type safety using Pydantic structured output models (`output_schema`).
+* Enforces type safety via Pydantic structured output models (`output_schema`).
 
-### 2. MCP Server Configuration
-* **Where**: [mcp_config.json](file:///C:/Users/xwts010/.gemini/antigravity/mcp_config.json)
-* **Details**: Configured authentication and endpoint mappings for the `google-developer-knowledge` HTTP-based MCP server. This allows AI coding agents to search and retrieve up-to-date documentation on the Google ADK and Generative Language APIs.
+### 2. Model Context Protocol (MCP) Server Configuration
+* **Location**: [mcp_config.json](mcp_config.json)
+* **Details**: Maps endpoints for the `google-developer-knowledge` HTTP-based MCP server. This allows AI coding agents to search and retrieve up-to-date documentation on the Google ADK and Generative Language APIs.
 
 ### 3. Pair Programming with Antigravity
-* **Where**: Project build history and documentation logs.
-* **Details**: Iteratively designed, developed, and verified using the Antigravity pair-programming agent environment to configure testing rigs, debug Windows .NET runtimes, and build setup scripts.
+* **Details**: Developed, debugged, and optimized within the Antigravity pair-programming agent environment to build test cases, compile Dafny schemas, and deploy live GCP resources.
 
-### 4. Security Features
-* **Where**: [config.py](config.py), [aba_monitor.py](aba_monitor.py), and [pipeline_adk.py](pipeline_adk.py)
+### 4. Advanced Security Features
+* **Location**: [config.py](config.py), [aba_monitor.py](aba_monitor.py), and [pipeline_adk.py](pipeline_adk.py)
 * **Details**: 
-  1. **Credential Security**: Strict path segregation. Zero API keys are hardcoded. Paths and configs are loaded from `.env` and structured dynamically using a centralized `SETTINGS.json` file.
-  2. **Logical Safety Proofs**: The core verification engine prevents software vulnerabilities. By defining invariants (e.g., class bounds like `balance >= 0`), the SMT verifier mathematically guarantees memory safety.
-  3. **Agent Behavioural Analytics (ABA) Circuit Breaker**: Continuously monitors the Agent Bill of Materials (AgBOM) to guard against infinite loops (3 identical outputs) and intent drift (semantic similarity < 0.45), instantly tripping the circuit breaker to prevent token-draining exploits.
-  4. **Evaluator Quorum Consensus Gate**: Intercepts all code mutation tool calls, requesting validation from a secondary judge agent, displaying a plain-English **Vibe Diff**, and demanding explicit human developer approval before updating files.
+  1. **Zero-Secret Hardcoding**: All secrets are isolated from the repository, loading dynamically through system environment variables and Google Application Default Credentials (ADC).
+  2. **Mathematical Invariant Proofs**: Enforces system safety parameters (e.g. `balance >= 0`) at the compiler level to ensure code security before test generation.
+  3. **ABA Circuit Breaker**: Tracks the execution Bill of Materials (AgBOM) to guard against infinite loops and intent drift (semantic similarity < 0.45), instantly halting execution to prevent resource exhaustion.
+  4. **Evaluator Quorum Gate**: Intercepts all code mutation tool calls, requesting validation from a secondary judge agent, displaying a plain-English **Vibe Diff**, and demanding explicit human developer approval before updating files.
 
 ### 5. Deployability & Agent Skills
-* **Where**: [bdd-agent-project/](bdd-agent-project/) and global agent skills configuration.
+* **Location**: [bdd-agent-project/](bdd-agent-project/)
 * **Details**:
-  1. **Deployability**: Scaffolded using the Google Cloud Agent templates. The `bdd-agent-project` subdirectory includes Terraform scripts and `app/agent_runtime_app.py` wrapper classes configured for deployment to **Vertex AI Agent Runtime** and Google Cloud Run.
-  2. **Agent Skills**: Using `uvx google-agents-cli setup`, we installed 7 active skills (`workflow`, `adk-code`, `scaffold`, `eval`, `deploy`, `publish`, `observability`) into the agent's customization root.
+  1. **Vertex AI Hosting**: Configured for deployment to **Vertex AI Agent Runtime (Reasoning Engines)**.
+  2. **Agent Skills**: Pre-installed with 7 active agent skills (`workflow`, `adk-code`, `scaffold`, `eval`, `deploy`, `publish`, `observability`) to support automated updates.
 
 ---
 
-## 💻 4. Technical Specifications & Environment
+## 💻 4. Technical Specifications & Hardware Environment
 
 ### Hardware Specifications
 * **CPU**: Intel(R) Core(TM) i7-10850H CPU @ 2.70GHz
@@ -96,25 +94,25 @@ In accordance with the Capstone Project evaluation rubric, this project demonstr
 * **OS**: Windows 11 Enterprise (Version 22H2 / OS Build 22621.3880)
 
 ### Third-Party Software Dependencies
-* **Python**: v3.11+ (Tested and verified on Python 3.14.0)
-* **.NET Runtime**: 10.0 (Dafny requires .NET to run compilation steps)
+* **Python**: v3.11+
+* **.NET Runtime**: 10.0 (Dafny compiler execution requirement)
 * **Dafny Compiler**: v4.11.0 (Automatically downloaded and set up locally in `/tools`)
 
 ---
 
-## 🛠️ 5. Installation & Setup
+## 🛠️ 5. Installation & Dependency Configurations
 
-1. **Clone & Set Up virtual environment**:
+1. **Set Up Virtual Environment**:
    ```bash
    python -m venv .venv
    .\.venv\Scripts\Activate.ps1
    pip install -r requirements.txt
    ```
-2. **Download Dafny locally**:
+2. **Download Dafny Compiler**:
    ```bash
    python tools_setup.py
    ```
-3. **Environment Setup (.env)**:
+3. **Environment Credentials (.env)**:
    Create a `.env` file in the root directory:
    ```env
    LLM_PROVIDER=gemini
@@ -124,7 +122,7 @@ In accordance with the Capstone Project evaluation rubric, this project demonstr
 
 ---
 
-## 🚀 6. Entry Points & Commands
+## 🚀 6. Execution Reference & Deployment Entry Points
 
 Refer to [entry_points.md](entry_points.md) for more details.
 
@@ -142,7 +140,7 @@ Refer to [entry_points.md](entry_points.md) for more details.
   ```
 * **Deploy Live to Google Cloud Agent Runtime**:
   ```bash
-  # Ensure you are in the bdd-agent-project directory
+  # Navigate to the agent project directory
   cd bdd-agent-project
   uv tool run google-agents-cli deploy --project <YOUR_GCP_PROJECT_ID>
   ```
