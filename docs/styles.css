@@ -370,6 +370,27 @@ textarea:focus {
 .vibe-summary.green-text { color: var(--accent-green); font-weight: 600; }
 .vibe-summary.red-text { color: var(--accent-red); font-weight: 600; }
 
+.code-editor {
+    width: 100%;
+    height: 120px;
+    background: #050508;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: #a3e635;
+    padding: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    line-height: 1.4;
+    outline: none;
+    margin-top: 0.5rem;
+    resize: vertical;
+}
+
+.code-editor:focus {
+    border-color: var(--accent-violet);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+
 .consent-actions {
     display: flex;
     gap: 1rem;

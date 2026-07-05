@@ -9,7 +9,8 @@ const sampleStories = [
         dafnyFix: "class Account {\n  var balance: int\n  constructor() {\n    balance := 100; // Corrected assignment operator\n  }\n}",
         errors: "test_spec_adk.dfy(4,12): Error: invalid NameSegment\n  |\n4 |     balance = 100; // Bug\n  |             ^",
         summary: "This change initializes the bank account balance field with an initial deposit value of 100 using Dafny verified constructors.",
-        gherkin: "Feature: Bank Account\n  Scenario: Initialize\n    Given the initial deposit balance is 100"
+        gherkin: "Feature: Bank Account\n  Scenario: Initialize\n    Given the initial deposit balance is 100",
+        rubyCode: "Given(/^the initial deposit balance is (\\d+)$/) do |balance|\n  @account = Account.new(balance.to_i)\n  # Verification check\n  expect(@account.balance).to eq(100)\nend"
     },
     {
         id: "atm_withdraw",
@@ -21,7 +22,8 @@ const sampleStories = [
         dafnyFix: "method Withdraw(amount: int)\n  requires balance >= amount\n  modifies this\n  ensures balance == old(balance) - amount\n{\n  balance := balance - amount;\n}",
         errors: "test_spec_adk.dfy(5,10): Error: invalid NameSegment\n  |\n5 |   balance = balance - amount;\n  |           ^",
         summary: "This change introduces the cash withdrawal operation, enforcing safety preconditions (balance must be >= amount) and updates the balance state securely.",
-        gherkin: "Feature: ATM Withdrawal\n  Scenario: Withdraw Cash\n    When the user withdraws 50"
+        gherkin: "Feature: ATM Withdrawal\n  Scenario: Withdraw Cash\n    When the user withdraws 50",
+        rubyCode: "When(/^the user withdraws (\\d+)$/) do |amount|\n  @account.withdraw(amount.to_i)\n  # Verification checklist\n  expect(@account.balance).to eq(50)\nend"
     },
     {
         id: "seat_allocation",
@@ -33,7 +35,8 @@ const sampleStories = [
         dafnyFix: "method AllocateSeat(seatId: int)\n  requires seatId >= 0 && seatId < MaxSeats\n  requires !seats[seatId]\n  modifies this\n  ensures seats[seatId]\n{\n  seats[seatId] := true;\n}",
         errors: "test_spec_adk.dfy(3,10): Error: pre-condition violation. Seat occupancy constraint missing.",
         summary: "Enforces seat boundaries and checks seat availability status before marking it as allocated.",
-        gherkin: "Feature: Flight Booking\n  Scenario: Reserve Seat\n    Given seat 12B is available\n    When the user reserves seat 12B\n    Then seat 12B should be occupied"
+        gherkin: "Feature: Flight Booking\n  Scenario: Reserve Seat\n    Given seat 12B is available\n    When the user reserves seat 12B\n    Then seat 12B should be occupied",
+        rubyCode: "Given(/^seat (\\w+) is available$/) do |seat_id|\n  @flight.mark_available(seat_id)\nend\n\nWhen(/^the user reserves seat (\\w+)$/) do |seat_id|\n  @flight.allocate(seat_id)\nend"
     },
     {
         id: "retail_discount",
@@ -45,7 +48,8 @@ const sampleStories = [
         dafnyFix: "method ApplyCoupon(coupon: Coupon)\n  requires cart.total >= coupon.value\n  modifies this\n  ensures cart.total == old(cart.total) - coupon.value\n{\n  cart.total := cart.total - coupon.value;\n}",
         errors: "test_spec_adk.dfy(4,14): Error: post-condition violation. Cart total fell below zero.",
         summary: "Validates checkout totals, ensuring coupon values do not exceed the current cart balance.",
-        gherkin: "Feature: Retail Checkout\n  Scenario: Apply Promo\n    Given the cart total is 100\n    When the user applies coupon of 20\n    Then the checkout total should be 80"
+        gherkin: "Feature: Retail Checkout\n  Scenario: Apply Promo\n    Given the cart total is 100\n    When the user applies coupon of 20\n    Then the checkout total should be 80",
+        rubyCode: "Given(/^the cart total is (\\d+)$/) do |total|\n  @cart = Cart.new(total.to_i)\nend\n\nWhen(/^the user applies coupon of (\\d+)$/) do |val|\n  @cart.apply_coupon(val.to_i)\nend"
     },
     {
         id: "medical_prescription",
@@ -57,7 +61,8 @@ const sampleStories = [
         dafnyFix: "method Dispense(dose: int)\n  requires dose > 0 && dose <= MaxFdaDose\n  modifies this\n  ensures activeDose == dose\n{\n  activeDose := dose;\n}",
         errors: "test_spec_adk.dfy(3,14): Error: invariant violation. Dose exceeds FDA safety limit.",
         summary: "Validates pharmaceutical dosage parameters against medical bounds before dispensing stubs.",
-        gherkin: "Feature: Pharmacy Dispenser\n  Scenario: Safety Check\n    When doctor prescribes 500mg dosage\n    Then the system should verify and authorize"
+        gherkin: "Feature: Pharmacy Dispenser\n  Scenario: Safety Check\n    When doctor prescribes 500mg dosage\n    Then the system should verify and authorize",
+        rubyCode: "When(/^doctor prescribes (\\d+)mg dosage$/) do |dosage|\n  @dispenser.prescribe(dosage.to_i)\nend\n\nThen(/^the system should verify and authorize$/) do\n  expect(@dispenser.authorized?).to be_truthy\nend"
     }
 ];
 
@@ -72,6 +77,8 @@ const graphViewport = document.getElementById("graphViewport");
 const traceContainer = document.getElementById("traceContainer");
 const vibeSummary = document.getElementById("vibeSummary");
 const consentActions = document.getElementById("consentActions");
+const codeEditorBox = document.getElementById("codeEditorBox");
+const proposedCodeEditor = document.getElementById("proposedCodeEditor");
 const approveBtn = document.getElementById("approveBtn");
 const rejectBtn = document.getElementById("rejectBtn");
 
@@ -95,6 +102,7 @@ function renderStories() {
         child.onclick = () => {
             selectedStory = sampleStories[index];
             customStory.value = "";
+            codeEditorBox.style.display = "none";
             renderStories();
         };
     });
@@ -207,6 +215,7 @@ async function runPipeline() {
     // Reset state
     terminalLog.innerHTML = "";
     consentActions.style.display = "none";
+    codeEditorBox.style.display = "none";
     vibeSummary.textContent = "Processing pipeline...";
     vibeSummary.className = "vibe-summary";
     renderTraces();
@@ -282,8 +291,10 @@ async function runPipeline() {
     writeLog("Invoking 'ruby-step-scaffolder' Agent Skill... (Intercepted by Quorum)");
     await sleep(1000);
     
-    // Activate Consent Gate Card UI
+    // Activate Consent Gate Card UI & load proposed code
     vibeSummary.textContent = selectedStory.summary;
+    proposedCodeEditor.value = selectedStory.rubyCode;
+    codeEditorBox.style.display = "block";
     consentActions.style.display = "flex";
     document.getElementById("consentCard").scrollIntoView({ behavior: 'smooth' });
 }
@@ -295,12 +306,15 @@ function sleep(ms) {
 
 // Handle Consent Decision Actions
 approveBtn.onclick = () => {
+    const finalCode = proposedCodeEditor.value.trim();
     writeLog("[Quorum] Evaluation decision: Approved=True.", "green");
-    writeLog("[+] Generated and managed new step definition (Approved by Quorum and User).", "green");
+    writeLog("[Quorum] Writing approved custom code stub to step definitions:\n" + finalCode, "green");
+    writeLog("[+] Successfully committed modifications to disk.", "green");
     writeLog("\n[Telemetry] Step Reuse Coverage Score: 100% (1/1 steps mapped)", "cyan");
     writeLog("BDD VERIFICATION PIPELINE COMPLETED SUCCESSFULLY!", "green");
     
     consentActions.style.display = "none";
+    codeEditorBox.style.display = "none";
     vibeSummary.textContent = "Code change APPROVED and written to disk successfully.";
     vibeSummary.className = "vibe-summary green-text";
     
@@ -314,6 +328,7 @@ rejectBtn.onclick = () => {
     writeLog("ValueError: User rejected code change consensus. Aborting file update.", "red");
     
     consentActions.style.display = "none";
+    codeEditorBox.style.display = "none";
     vibeSummary.textContent = "Code change REJECTED. Pipeline execution aborted and files rolled back.";
     vibeSummary.className = "vibe-summary red-text";
     

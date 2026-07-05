@@ -70,7 +70,7 @@
             <!-- Vibe Diff Human Approval -->
             <div class="card consent-card" id="consentCard">
                 <h3>Phase 4: Human Consent & Vibe Diff Gate</h3>
-                <p class="desc">Quorum-inspected plain-English change summary awaiting developer authorization.</p>
+                <p class="desc">Quorum-inspected plain-English change summary and proposed code. You can edit the code stub directly below before approving.</p>
                 <div class="vibe-diff-content">
                     <div class="vibe-header">
                         <strong>PROPOSED CODE MODIFICATION VIBE DIFF</strong>
@@ -78,6 +78,10 @@
                     </div>
                     <div class="vibe-summary" id="vibeSummary">
                         Select a user story and run the pipeline to inspect Vibe Diff...
+                    </div>
+                    <div class="code-editor-box" id="codeEditorBox" style="display: none; margin-top: 1rem;">
+                        <h4 style="font-size: 0.8rem; margin-bottom: 0.5rem; color: var(--accent-violet);">✏️ Edit Proposed Ruby Stub Code:</h4>
+                        <textarea id="proposedCodeEditor" class="code-editor"></textarea>
                     </div>
                 </div>
                 <div class="consent-actions" id="consentActions" style="display: none;">
