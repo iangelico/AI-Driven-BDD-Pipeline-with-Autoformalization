@@ -84,30 +84,25 @@ This project implements five key architectural concepts under the Kaggle Capston
   4. **Evaluator Quorum Gate**: Intercepts all code mutation tool calls, requesting validation from a secondary judge agent, displaying a plain-English **Vibe Diff**, and demanding explicit human developer approval before updating files.
 
 ### 5. Deployability & Agent Skills
-* **Location**: [bdd-agent-project/](bdd-agent-project/)
+* **Location**: [bdd-agent-project/](bdd-agent-project/) and [.agents/skills/](.agents/skills/)
 * **Details**:
   1. **Vertex AI Hosting**: Configured for deployment to **Vertex AI Agent Runtime (Reasoning Engines)**.
-  2. **Agent Skills**: Pre-installed with 7 active agent skills (`workflow`, `adk-code`, `scaffold`, `eval`, `deploy`, `publish`, `observability`) to support automated updates.
+  2. **Custom Workspace Agent Skills**: We designed and implemented three custom workspace skills:
+     * **`nl-to-dafny`**: Guides the Autoformalizer in mapping informal business rules to Dafny classes and invariants.
+     * **`ruby-step-scaffolder`**: Automates Gherkin step implementation by generating Ruby stub definitions.
+     * **`step-definition-manager`**: Safely performs regex expansions and integrates with the Evaluator Quorum.
+  3. **Core Agent Tooling Skills**: Pre-installed with 7 active CLI tool skills (`workflow`, `adk-code`, `scaffold`, `eval`, `deploy`, `publish`, `observability`).
 
 ---
 
-## 💻 4. Technical Specifications & Hardware Environment
+## 🛠️ 4. Installation & Dependency Configurations
 
-### Hardware Specifications
-* **CPU**: Intel(R) Core(TM) i7-10850H CPU @ 2.70GHz
-* **Cores**: 6 Cores, 12 Logical Processors
-* **Memory**: 32.0 GB RAM
-* **OS**: Windows 11 Enterprise (Version 22H2 / OS Build 22621.3880)
-
-### Third-Party Software Dependencies
+### Prerequisites
 * **Python**: v3.11+
-* **.NET Runtime**: 10.0 (Dafny compiler execution requirement)
-* **Dafny Compiler**: v4.11.0 (Automatically downloaded and set up locally in `/tools`)
+* **.NET Runtime**: 10.0 or higher (required by the Dafny verifier execution environment)
+* **Dafny Compiler**: v4.11.0 (automatically managed by the setup script)
 
----
-
-## 🛠️ 5. Installation & Dependency Configurations
-
+### Setup Steps
 1. **Set Up Virtual Environment**:
    ```bash
    python -m venv .venv
@@ -128,7 +123,7 @@ This project implements five key architectural concepts under the Kaggle Capston
 
 ---
 
-## 🚀 6. Execution Reference & Deployment Entry Points
+## 🚀 5. Execution Reference & Deployment Entry Points
 
 Refer to [entry_points.md](entry_points.md) for more details.
 
