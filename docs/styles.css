@@ -108,7 +108,24 @@ h2, h3 {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
+    max-height: 250px;
+    overflow-y: auto;
     margin-bottom: 1.5rem;
+    padding-right: 0.4rem;
+}
+
+.story-list::-webkit-scrollbar {
+    width: 4px;
+}
+.story-list::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+.story-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+}
+.story-list::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-violet);
 }
 
 .story-item {

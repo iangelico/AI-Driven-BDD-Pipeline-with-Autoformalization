@@ -63,6 +63,32 @@ const sampleStories = [
         summary: "Validates pharmaceutical dosage parameters against medical bounds before dispensing stubs.",
         gherkin: "Feature: Pharmacy Dispenser\n  Scenario: Safety Check\n    When doctor prescribes 500mg dosage\n    Then the system should verify and authorize",
         rubyCode: "When(/^doctor prescribes (\\d+)mg dosage$/) do |dosage|\n  @dispenser.prescribe(dosage.to_i)\nend\n\nThen(/^the system should verify and authorize$/) do\n  expect(@dispenser.authorized?).to be_truthy\nend"
+    },
+    {
+        id: "logistics_mileage",
+        title: "Logistics Mileage Tracking",
+        category: "Logistics Domain",
+        domain: "Logistics",
+        text: "As a user, I want to track delivery vehicle mileage logs to ensure fuel efficiency compliance.",
+        dafnyBuggy: "method LogMileage(dist: int)\n{\n  mileage = mileage + dist; // Bug: invalid assignment\n}",
+        dafnyFix: "method LogMileage(dist: int)\n  requires dist > 0\n  modifies this\n  ensures mileage == old(mileage) + dist\n{\n  mileage := mileage + dist;\n}",
+        errors: "test_spec_ady.dfy(3,10): Error: pre-condition violation. Distance traveled must be positive.",
+        summary: "Accumulates distance logs on vehicle state objects, validating trip parameters.",
+        gherkin: "Feature: Mileage Logging\n  Scenario: Record Trip\n    Given starting mileage is 10000\n    When the vehicle travels 150 miles\n    Then the odometer should read 10150",
+        rubyCode: "Given(/^starting mileage is (\\d+)$/) do |start_mil|\n  @truck = Vehicle.new(start_mil.to_i)\nend\n\nWhen(/^the vehicle travels (\\d+) miles$/) do |dist|\n  @truck.drive(dist.to_i)\nend"
+    },
+    {
+        id: "smart_home_temp",
+        title: "Smart Thermostat Limit",
+        category: "Smart Home Domain",
+        domain: "Smart Home",
+        text: "As a user, I want to regulate house temperature safely within bounds of 15 to 30 degrees.",
+        dafnyBuggy: "method SetTemp(t: int)\n{\n  temp = t; // Bug: bound checks missing\n}",
+        dafnyFix: "method SetTemp(t: int)\n  requires t >= 15 && t <= 30\n  modifies this\n  ensures temp == t\n{\n  temp := t;\n}",
+        errors: "test_spec_adk.dfy(3,10): Error: post-condition violation. Target temperature exceeds safety envelope.",
+        summary: "Validates thermostat inputs to keep climate control within safe regulatory bounds.",
+        gherkin: "Feature: Smart Thermostat\n  Scenario: Set Bounds\n    Given thermostat is set to 20\n    When temperature is changed to 25\n    Then target temp should be 25",
+        rubyCode: "Given(/^thermostat is set to (\\d+)$/) do |temp|\n  @thermostat = Thermostat.new(temp.to_i)\nend\n\nWhen(/^temperature is changed to (\\d+)$/) do |target|\n  @thermostat.set_temperature(target.to_i)\nend"
     }
 ];
 
