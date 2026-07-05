@@ -2,6 +2,8 @@ const sampleStories = [
     {
         id: "account_init",
         title: "Account Initialization",
+        category: "⭐ CORE: Verification Loop",
+        domain: "Banking",
         text: "As a user, I want to initialize my bank account with a starting balance of 100.",
         dafnyBuggy: "class Account {\n  var balance: int\n  constructor() {\n    balance = 100; // Bug: invalid assignment\n  }\n}",
         dafnyFix: "class Account {\n  var balance: int\n  constructor() {\n    balance := 100; // Corrected assignment operator\n  }\n}",
@@ -12,12 +14,50 @@ const sampleStories = [
     {
         id: "atm_withdraw",
         title: "ATM Cash Withdrawal",
+        category: "⭐ CORE: Dependency Map",
+        domain: "Banking",
         text: "As a user, I want to withdraw cash from my bank account, subject to positive balance check.",
         dafnyBuggy: "method Withdraw(amount: int)\n  requires balance >= amount\n{\n  balance = balance - amount; // Bug: invalid assignment\n}",
         dafnyFix: "method Withdraw(amount: int)\n  requires balance >= amount\n  modifies this\n  ensures balance == old(balance) - amount\n{\n  balance := balance - amount;\n}",
         errors: "test_spec_adk.dfy(5,10): Error: invalid NameSegment\n  |\n5 |   balance = balance - amount;\n  |           ^",
         summary: "This change introduces the cash withdrawal operation, enforcing safety preconditions (balance must be >= amount) and updates the balance state securely.",
         gherkin: "Feature: ATM Withdrawal\n  Scenario: Withdraw Cash\n    When the user withdraws 50"
+    },
+    {
+        id: "seat_allocation",
+        title: "Flight Seat Allocation",
+        category: "Booking Domain",
+        domain: "Booking",
+        text: "As a user, I want to reserve a specific seat on a flight, ensuring the seat is not already allocated.",
+        dafnyBuggy: "method AllocateSeat(seatId: int)\n{\n  seats[seatId] = true; // Bug: no occupancy check\n}",
+        dafnyFix: "method AllocateSeat(seatId: int)\n  requires seatId >= 0 && seatId < MaxSeats\n  requires !seats[seatId]\n  modifies this\n  ensures seats[seatId]\n{\n  seats[seatId] := true;\n}",
+        errors: "test_spec_adk.dfy(3,10): Error: pre-condition violation. Seat occupancy constraint missing.",
+        summary: "Enforces seat boundaries and checks seat availability status before marking it as allocated.",
+        gherkin: "Feature: Flight Booking\n  Scenario: Reserve Seat\n    Given seat 12B is available\n    When the user reserves seat 12B\n    Then seat 12B should be occupied"
+    },
+    {
+        id: "retail_discount",
+        title: "Retail Discount Checkout",
+        category: "Retail Domain",
+        domain: "Retail",
+        text: "As a user, I want to apply a coupon code at checkout to reduce my total cart price.",
+        dafnyBuggy: "method ApplyCoupon(coupon: Coupon)\n{\n  cart.total = cart.total - coupon.value; // Bug: negative checkout check missing\n}",
+        dafnyFix: "method ApplyCoupon(coupon: Coupon)\n  requires cart.total >= coupon.value\n  modifies this\n  ensures cart.total == old(cart.total) - coupon.value\n{\n  cart.total := cart.total - coupon.value;\n}",
+        errors: "test_spec_adk.dfy(4,14): Error: post-condition violation. Cart total fell below zero.",
+        summary: "Validates checkout totals, ensuring coupon values do not exceed the current cart balance.",
+        gherkin: "Feature: Retail Checkout\n  Scenario: Apply Promo\n    Given the cart total is 100\n    When the user applies coupon of 20\n    Then the checkout total should be 80"
+    },
+    {
+        id: "medical_prescription",
+        title: "Prescription Validation",
+        category: "Medical Domain",
+        domain: "Medical",
+        text: "As a user, I want to validate drug dosage levels against FDA maximum limits before authorization.",
+        dafnyBuggy: "method Dispense(dose: int)\n{\n  activeDose = dose; // Bug: limit check missing\n}",
+        dafnyFix: "method Dispense(dose: int)\n  requires dose > 0 && dose <= MaxFdaDose\n  modifies this\n  ensures activeDose == dose\n{\n  activeDose := dose;\n}",
+        errors: "test_spec_adk.dfy(3,14): Error: invariant violation. Dose exceeds FDA safety limit.",
+        summary: "Validates pharmaceutical dosage parameters against medical bounds before dispensing stubs.",
+        gherkin: "Feature: Pharmacy Dispenser\n  Scenario: Safety Check\n    When doctor prescribes 500mg dosage\n    Then the system should verify and authorize"
     }
 ];
 
@@ -40,17 +80,17 @@ function renderStories() {
     storyList.innerHTML = "";
     sampleStories.forEach(story => {
         const item = document.createElement("div");
-        item.className = "story-item" + (selectedStory.id === story.id ? " active" : "");
-        item.textContent = story.title;
-        item.addEventListener("click", () => {
-            selectedStory = story;
-            customStory.value = "";
-            renderStories();
-        });
-        storyList.innerHTML += item.outerHTML;
+        const isCore = story.category.includes("⭐ CORE");
+        item.className = "story-item" + (selectedStory.id === story.id ? " active" : "") + (isCore ? " core-story" : "");
+        
+        item.innerHTML = `
+            <div class="story-title">${story.title}</div>
+            <div class="story-badge">${story.category}</div>
+        `;
+        storyList.appendChild(item);
     });
     
-    // Re-bind event listeners since outerHTML replaces elements
+    // Bind click events
     Array.from(storyList.children).forEach((child, index) => {
         child.onclick = () => {
             selectedStory = sampleStories[index];
@@ -76,8 +116,8 @@ function drawGraph(activeNodeId = null, highlightDependents = false) {
     // Nodes coordinates
     const nodes = [
         { id: "story", label: "UserStory", title: selectedStory.title, x: 60, y: 70, color: "#3b82f6" },
-        { id: "step", label: "GherkinStep", title: isWithdraw ? "When the user withdraws 50" : "Given the initial deposit balance is 100", x: 190, y: 70, color: "#10b981" },
-        { id: "ruby", label: "RubyDefinition", title: isWithdraw ? "When(/^the user withdraws (\\d+)$/)" : "Given(/^the initial deposit balance is (\\d+)$/)", x: 320, y: 70, color: "#8b5cf6" }
+        { id: "step", label: "GherkinStep", title: selectedStory.gherkin.split('\n')[2] || "Cucumber Step", x: 190, y: 70, color: "#10b981" },
+        { id: "ruby", label: "RubyDefinition", title: "Ruby Step Implementation", x: 320, y: 70, color: "#8b5cf6" }
     ];
     
     // If it's the withdrawal story, add dependency node
@@ -239,7 +279,7 @@ async function runPipeline() {
     await sleep(1000);
     
     writeLog("[!] HUMAN-IN-THE-LOOP CHECKPOINT: Unmapped Gherkin Step Detected!", "yellow");
-    writeLog("Invoking 'ruby-step-scaffolder' Agent Skill...");
+    writeLog("Invoking 'ruby-step-scaffolder' Agent Skill... (Intercepted by Quorum)");
     await sleep(1000);
     
     // Activate Consent Gate Card UI

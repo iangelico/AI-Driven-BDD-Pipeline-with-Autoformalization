@@ -117,13 +117,32 @@ h2, h3 {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     cursor: pointer;
-    font-size: 0.85rem;
     transition: background 0.2s, border-color 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
 .story-item:hover, .story-item.active {
     background: rgba(59, 130, 246, 0.1);
     border-color: var(--accent-blue);
+}
+
+.story-item.core-story {
+    border-left: 3px solid var(--accent-violet);
+    background: rgba(139, 92, 246, 0.03);
+}
+
+.story-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.story-badge {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
 }
 
 textarea {
