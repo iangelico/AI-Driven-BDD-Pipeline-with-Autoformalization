@@ -46,6 +46,19 @@
                 </div>
             </div>
 
+            <!-- Dafny Spec Card -->
+            <div class="card spec-card" id="specCard" style="display: none; margin-bottom: 1.5rem;">
+                <h3>Dafny Spec & Verifier Feedback</h3>
+                <p class="desc">Dafny specification currently compiling and verifying. Watch the code update live as self-correction occurs.</p>
+                <div class="spec-container">
+                    <div class="spec-header">
+                        <span id="specStatus" class="spec-badge pending">PENDING</span>
+                        <span class="file-label" id="specFileLabel">spec/verification_target.dfy</span>
+                    </div>
+                    <pre class="spec-code-pre"><code id="specCodeArea">// Dafny code will load here...</code></pre>
+                </div>
+            </div>
+
             <!-- Dashboard Grid -->
             <div class="dashboard-grid">
                 <!-- Spanner Graph -->

@@ -356,6 +356,46 @@ textarea:focus {
     color: var(--text-secondary);
 }
 
+/* Spec Card */
+.spec-container {
+    background: #020204;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.2rem;
+    font-family: var(--font-mono);
+}
+
+.spec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.spec-badge {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.spec-badge.pending { background: rgba(161, 161, 170, 0.1); color: #a1a1aa; }
+.spec-badge.verifying { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+.spec-badge.failed { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+.spec-badge.success { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+
+.spec-code-pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-size: 0.85rem;
+    color: #f4f4f5;
+    line-height: 1.5;
+}
+
 /* Consent Card */
 .vibe-diff-content {
     background: #020204;

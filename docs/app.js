@@ -108,6 +108,11 @@ const proposedCodeEditor = document.getElementById("proposedCodeEditor");
 const approveBtn = document.getElementById("approveBtn");
 const rejectBtn = document.getElementById("rejectBtn");
 
+// Dafny spec elements
+const specCard = document.getElementById("specCard");
+const specStatus = document.getElementById("specStatus");
+const specCodeArea = document.getElementById("specCodeArea");
+
 // Render story selection list
 function renderStories() {
     storyList.innerHTML = "";
@@ -129,6 +134,7 @@ function renderStories() {
             selectedStory = sampleStories[index];
             customStory.value = "";
             codeEditorBox.style.display = "none";
+            specCard.style.display = "none";
             renderStories();
         };
     });
@@ -247,6 +253,12 @@ async function runPipeline() {
     renderTraces();
     drawGraph();
     
+    // Reset and show spec card
+    specCard.style.display = "block";
+    specStatus.textContent = "PENDING";
+    specStatus.className = "spec-badge pending";
+    specCodeArea.textContent = "// Running autoformalizer agent...";
+    
     const storyText = customStory.value.trim() || selectedStory.text;
     
     writeLog("Starting pipeline execution...", "cyan");
@@ -258,6 +270,11 @@ async function runPipeline() {
     writeLog("============================================================", "yellow");
     writeLog("Generating initial Dafny specification from story requirement...");
     renderTraces({ p1: 95, p2: 0, p3: 0, p4: 0 });
+    
+    specStatus.textContent = "VERIFYING";
+    specStatus.className = "spec-badge verifying";
+    specCodeArea.textContent = selectedStory.dafnyBuggy;
+    
     await sleep(1500);
     writeLog("Initial specification drafted successfully.");
     
@@ -286,6 +303,11 @@ async function runPipeline() {
     writeLog("FAILED: Verification issues detected:", "red");
     writeLog(selectedStory.errors, "red");
     
+    // Update spec status to failed and show logs
+    specStatus.textContent = "FAILED (ATTEMPT 1)";
+    specStatus.className = "spec-badge failed";
+    specCodeArea.textContent = `${selectedStory.dafnyBuggy}\n\n// --- COMPILER ERRORS ---\n${selectedStory.errors}`;
+    
     writeLog("\nTriggering ADK self-correction loop...", "yellow");
     writeLog("[Task Breakdown] Generated fix checklist:\n  - [ ] Fix syntax errors or modifier mappings");
     await sleep(1500);
@@ -293,9 +315,18 @@ async function runPipeline() {
     writeLog("Self-correction compiled. Resubmitting to verification compiler...");
     writeLog("Verification Attempt 2/3...");
     renderTraces({ p1: 95, p2: 90, p3: 0, p4: 0 });
+    
+    specStatus.textContent = "VERIFYING (ATTEMPT 2)";
+    specStatus.className = "spec-badge verifying";
+    specCodeArea.textContent = selectedStory.dafnyFix;
+    
     await sleep(1200);
     writeLog("SUCCESS: Dafny specification verified successfully in attempt 2!", "green");
     writeLog("[Graph] Saved verified specification to graph database.");
+    
+    // Update spec status to success
+    specStatus.textContent = "SUCCESS (VERIFIED)";
+    specStatus.className = "spec-badge success";
     
     // Phase 3: Feature Generation
     writeLog("\n============================================================", "yellow");
