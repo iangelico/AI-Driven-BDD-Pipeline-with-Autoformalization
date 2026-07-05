@@ -38,3 +38,8 @@ verification_failed_report.txt
 .vscode/
 .idea/
 SETTINGS.json
+
+# Local Writeup Files
+project_description.md
+project_description.txt
+*evaluation and rules.md
