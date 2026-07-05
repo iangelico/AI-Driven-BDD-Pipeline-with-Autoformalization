@@ -1,0 +1,1 @@
+As a shipping customer, I want to track package delivery status. Precondition: Initial state is 'ordered'. Transitions: ordered -> shipped -> delivered.

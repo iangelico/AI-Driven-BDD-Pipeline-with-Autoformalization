@@ -1,0 +1,1 @@
+As a passenger, I want to cancel my reservation. Precondition: Reservation is active. Postcondition: Seat count increases by 1, and reservation becomes inactive.

@@ -1,0 +1,1 @@
+As an account holder, I want to deposit funds into my savings account. Precondition: Deposit amount must be strictly positive. Postcondition: The savings balance must increase by the deposited amount.

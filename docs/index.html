@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Driven BDD Pipeline with Formal Verification</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <header>
+        <div class="logo">🚀 Tier 3 BDD Pipeline</div>
+        <div class="tagline">Formal Autoformalization & Verification Sandbox</div>
+    </header>
+
+    <main class="container">
+        <!-- Sidebar Controls -->
+        <section class="sidebar card">
+            <h2>Select User Story</h2>
+            <p class="desc font-sub">Pick a business requirement to run through the verification pipeline:</p>
+            <div class="story-list" id="storyList">
+                <!-- Loaded dynamically -->
+            </div>
+            
+            <div class="custom-story-box">
+                <h3>Or Write Your Own</h3>
+                <textarea id="customStory" placeholder="As a user, I want to withdraw cash..."></textarea>
+                <button class="btn btn-primary" id="runBtn">Run Verification Pipeline</button>
+            </div>
+        </section>
+
+        <!-- Main Workspace -->
+        <section class="workspace">
+            <!-- Phase 1 & 2: Verification Terminal -->
+            <div class="card terminal-card">
+                <div class="card-header">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                    <span class="title">Agentic Verification compiler log</span>
+                </div>
+                <div class="terminal-body" id="terminalLog">
+                    <span class="cyan">Ready to run verification. Click "Run Verification Pipeline" to begin...</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Spanner Graph -->
+                <div class="card graph-card">
+                    <h3>Spanner Graph Impact Map</h3>
+                    <p class="desc">Interactive dependency map. Click nodes to run transitive GQL impact checks.</p>
+                    <div class="graph-viewport" id="graphViewport">
+                        <!-- SVG Node Visualizer -->
+                    </div>
+                </div>
+
+                <!-- OpenTelemetry Traces -->
+                <div class="card trace-card">
+                    <h3>OpenTelemetry Visual Traces</h3>
+                    <p class="desc">Observe nested spans and telemetry durations live.</p>
+                    <div class="trace-container" id="traceContainer">
+                        <!-- Loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vibe Diff Human Approval -->
+            <div class="card consent-card" id="consentCard">
+                <h3>Phase 4: Human Consent & Vibe Diff Gate</h3>
+                <p class="desc">Quorum-inspected plain-English change summary awaiting developer authorization.</p>
+                <div class="vibe-diff-content">
+                    <div class="vibe-header">
+                        <strong>PROPOSED CODE MODIFICATION VIBE DIFF</strong>
+                        <span class="file-label">step_definitions/account_steps.rb</span>
+                    </div>
+                    <div class="vibe-summary" id="vibeSummary">
+                        Select a user story and run the pipeline to inspect Vibe Diff...
+                    </div>
+                </div>
+                <div class="consent-actions" id="consentActions" style="display: none;">
+                    <button class="btn btn-success" id="approveBtn">Approve & Write to Disk</button>
+                    <button class="btn btn-danger" id="rejectBtn">Reject & Abort</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Kaggle AI Agents Capstone Project Submission &bull; Powered by Google ADK 2.0 & Spanner Graph
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

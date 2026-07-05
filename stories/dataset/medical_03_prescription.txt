@@ -1,0 +1,1 @@
+As a doctor, I want to issue a prescription. Precondition: Dosage is positive. Rule: Dosage cannot exceed the safety maximum of 100 milligrams.

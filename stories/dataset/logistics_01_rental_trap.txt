@@ -1,0 +1,1 @@
+As a driver, I want to rent a car and drive it. Rule: Driving a rental car must consume fuel. [Dafny Trap: Modifies the fuel level state variable in the drive method but fails to declare a 'modifies this' clause on the method signature, triggering a verification error.]

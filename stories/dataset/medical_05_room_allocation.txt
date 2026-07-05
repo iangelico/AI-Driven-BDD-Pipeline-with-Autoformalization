@@ -1,0 +1,1 @@
+As a ward manager, I want to allocate a bed. Precondition: Bed count is greater than 0. Postcondition: Bed count decreases by 1.

@@ -1,0 +1,1 @@
+As an online buyer, I want to checkout my cart. Rule: Items must be subtracted from inventory. [Dafny Trap: Tries to modify a read-only variable in the method body, triggering a compiler syntax error.]

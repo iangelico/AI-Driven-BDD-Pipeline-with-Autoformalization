@@ -1,0 +1,1 @@
+As a user, I want to dim the smart lights. Rule: Dim level must be between 0 and 100. Precondition: Lights are turned on.

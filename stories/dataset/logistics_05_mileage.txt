@@ -1,0 +1,1 @@
+As a car rental manager, I want to record ending mileage. Precondition: Ending mileage must be strictly greater than starting mileage.

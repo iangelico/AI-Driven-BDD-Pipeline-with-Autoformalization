@@ -1,0 +1,1 @@
+As a shopper, I want to add items to my shopping cart. Precondition: The item quantity must be greater than zero. Postcondition: The cart total quantity increases by the added amount.

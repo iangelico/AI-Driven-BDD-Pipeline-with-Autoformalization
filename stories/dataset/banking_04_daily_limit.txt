@@ -1,0 +1,1 @@
+As a cardholder, I want to withdraw cash up to my daily limit. Rule: Daily withdrawals must not exceed 500 dollars. Precondition: The withdrawal amount is positive and balance is sufficient.

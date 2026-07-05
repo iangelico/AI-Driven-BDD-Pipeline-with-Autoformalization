@@ -1,0 +1,40 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+bin/
+lib/
+include/
+
+# Python Cache & Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local Mock Database Fallbacks
+*.db
+spanner_mock.db
+
+# System Credentials & Private Environments
+.env
+.env.local
+.env.production
+
+# Large Binary Tools (automatically installed via tools_setup.py)
+tools/
+dafny/
+z3/
+
+# Local Generated Verification Logs & Reports
+verification_failed_report.txt
+*.log
+
+# Editor Settings
+.vscode/
+.idea/
+SETTINGS.json

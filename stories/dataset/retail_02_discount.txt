@@ -1,0 +1,1 @@
+As a customer, I want to apply a promo code to my order. Rule: The discount must be 10 percent. Precondition: Order total must be positive. Postcondition: Order total decreases by the discount.

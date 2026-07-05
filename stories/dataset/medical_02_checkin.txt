@@ -1,0 +1,1 @@
+As a triage nurse, I want to check in a patient. Precondition: Patient is not currently admitted. Postcondition: Patient is admitted with a priority code.

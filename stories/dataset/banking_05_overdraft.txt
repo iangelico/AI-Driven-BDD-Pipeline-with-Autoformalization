@@ -1,0 +1,1 @@
+As a checking account customer, I want to withdraw money with a small overdraft limit. Rule: The balance is allowed to go down to -100 dollars, but no further. Precondition: The requested amount is positive.

@@ -1,0 +1,1 @@
+As a member, I want to redeem loyalty points. Precondition: Points balance is sufficient. Postcondition: Deduct points and mark booking as discounted.

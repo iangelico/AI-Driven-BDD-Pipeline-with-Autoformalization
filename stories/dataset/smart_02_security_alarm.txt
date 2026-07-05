@@ -1,0 +1,1 @@
+As a resident, I want to arm my security system. Precondition: All windows are closed. Postcondition: Alarm state is armed.

@@ -1,0 +1,1 @@
+As a physician, I want to discharge a patient. Precondition: Patient is currently admitted. Postcondition: Patient is marked discharged.

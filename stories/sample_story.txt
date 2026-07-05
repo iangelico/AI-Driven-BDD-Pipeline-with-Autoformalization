@@ -1,0 +1,10 @@
+User Story: ATM Cash Withdrawal
+
+As a bank customer, I want to withdraw cash from my checking account using an ATM.
+
+Business Rules & Constraints:
+1. The checking account balance must never go below $0.
+2. The maximum cash withdrawal in a single transaction is $500.
+3. The customer must have sufficient funds in their account to cover the withdrawal.
+4. If a withdrawal succeeds, the account balance is decremented by the withdrawn amount.
+5. If a withdrawal fails (e.g. insufficient funds or limit exceeded), the account balance must remain unchanged.

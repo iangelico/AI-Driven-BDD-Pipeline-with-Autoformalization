@@ -1,0 +1,1 @@
+As a traveler, I want to book a seat on a flight. Rule: A seat is reserved on success. [Dafny Trap: Postcondition specifies that 'reserved == true' and seat count decreases, but the method body fails to update the variables, triggering a postcondition verification failure.]

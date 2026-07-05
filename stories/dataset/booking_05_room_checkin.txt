@@ -1,0 +1,1 @@
+As a hotel guest, I want to check in to my room. Precondition: Room status is 'cleaned'. Postcondition: Room status becomes 'occupied'.

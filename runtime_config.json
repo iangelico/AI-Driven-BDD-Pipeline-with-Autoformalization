@@ -1,0 +1,21 @@
+{
+  "runtime": "google-cloud-agent-runtime",
+  "version": "1.0.0",
+  "entrypoint": "pipeline_adk.py",
+  "environment": {
+    "SPANNER_DATABASE": "bdd-db",
+    "SPANNER_INSTANCE": "bdd-instance",
+    "GOOGLE_CLOUD_PROJECT": "booming-argon-499923-i2"
+  },
+  "resources": {
+    "cpu": "2",
+    "memory": "4Gi"
+  },
+  "services": [
+    {
+      "name": "google-developer-knowledge-mcp",
+      "type": "mcp-server",
+      "port": 50051
+    }
+  ]
+}

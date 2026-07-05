@@ -1,0 +1,1 @@
+As a cargo loader, I want to add packages to a truck. Rule: Truck total weight cannot exceed 5000 kilograms. Precondition: Added package weight is positive.

@@ -1,0 +1,1 @@
+As a homeowner, I want to adjust the smart thermostat temperature. Rule: Target temperature must be between 15 and 30 degrees Celsius.

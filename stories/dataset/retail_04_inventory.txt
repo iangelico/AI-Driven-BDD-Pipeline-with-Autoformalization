@@ -1,0 +1,1 @@
+As a store manager, I want to restock inventory. Precondition: Restock quantity is positive. Postcondition: Item stock increases by the restock quantity.

@@ -1,0 +1,1 @@
+As a farmer, I want to open the irrigation valve. Rule: Valve closes automatically after 60 minutes. Precondition: System pressure is normal.

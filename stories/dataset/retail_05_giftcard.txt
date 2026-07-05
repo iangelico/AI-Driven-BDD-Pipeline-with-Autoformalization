@@ -1,0 +1,1 @@
+As a customer, I want to pay using a gift card. Precondition: Gift card balance must be positive. Rule: If order total exceeds gift card balance, deduct entire gift card.

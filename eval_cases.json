@@ -1,0 +1,71 @@
+[
+  {
+    "case_id": "eval_infinite_loop",
+    "component": "aba_monitor",
+    "description": "Verify that generating identical outputs repeatedly trips the circuit breaker.",
+    "input": {
+      "agent_name": "corrector",
+      "prompt": "Fix syntax",
+      "outputs": ["Same spec code", "Same spec code", "Same spec code"]
+    },
+    "expected": {
+      "circuit_breaker_tripped": true,
+      "reason_contains": "Infinite loop detected"
+    }
+  },
+  {
+    "case_id": "eval_intent_drift",
+    "component": "aba_monitor",
+    "description": "Verify that a low semantic similarity between user story and response trips the circuit breaker.",
+    "input": {
+      "agent_name": "autoformalizer",
+      "prompt": "Formalize",
+      "original_story_embedding": [1.0, 0.0, 0.0],
+      "response_embedding": [0.1, 0.9, 0.0]
+    },
+    "expected": {
+      "circuit_breaker_tripped": true,
+      "reason_contains": "Intent drift detected"
+    }
+  },
+  {
+    "case_id": "eval_quorum_rejection",
+    "component": "evaluator_quorum",
+    "description": "Verify that malicious patterns in the proposed code changes are rejected by the quorum.",
+    "input": {
+      "step_type": "When",
+      "step_text": "the user performs a malicious action"
+    },
+    "expected": {
+      "is_approved": false,
+      "reason_contains": "unacceptable logic or unsafe patterns"
+    }
+  },
+  {
+    "case_id": "eval_step_reuse",
+    "component": "step_definition_manager",
+    "description": "Verify that the pipeline correctly reuses an existing matching step definition from Spanner Graph.",
+    "input": {
+      "step_type": "Given",
+      "step_text": "the account balance is 1000",
+      "existing_phrase": "the account balance is 1000"
+    },
+    "expected": {
+      "reused": true
+    }
+  },
+  {
+    "case_id": "eval_step_generate",
+    "component": "step_definition_manager",
+    "description": "Verify that when no match is found, the pipeline scaffolds a new step definition stub.",
+    "input": {
+      "step_type": "When",
+      "step_text": "a new action is executed",
+      "existing_phrase": null
+    },
+    "expected": {
+      "reused": false,
+      "scaffolded": true
+    }
+  }
+]

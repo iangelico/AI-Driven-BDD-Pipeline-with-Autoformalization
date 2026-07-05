@@ -1,0 +1,1 @@
+As a user, I want to start camera recording. Precondition: Disk space is greater than 5 gigabytes. Postcondition: Recording status is active.

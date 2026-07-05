@@ -1,0 +1,1 @@
+As a scheduler, I want to book a doctor appointment. Rule: Doctor cannot be double booked. [Dafny Trap: Has contradictory preconditions 'requires duration > 0' and 'requires duration < 0' making it unsatisfiable, causing verification logic failures.]

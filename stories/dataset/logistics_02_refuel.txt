@@ -1,0 +1,1 @@
+As a driver, I want to refuel my car. Precondition: Added fuel must be positive. Rule: Total fuel cannot exceed the tank capacity of 60 liters.

@@ -1,0 +1,1 @@
+As a bank customer, I want to withdraw cash from my checking account. Precondition: Account balance must be positive. Rule: Withdrawals cannot exceed the current balance. Invariant: The balance must never go below 0.

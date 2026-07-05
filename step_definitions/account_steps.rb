@@ -1,0 +1,1 @@
+Given(/^a new action is executed$/) do end

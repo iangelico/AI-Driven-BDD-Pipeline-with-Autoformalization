@@ -1,0 +1,1 @@
+As a concert attendee, I want to book tickets. Rule: A single transaction cannot exceed 10 tickets. Precondition: Requested tickets is positive.
