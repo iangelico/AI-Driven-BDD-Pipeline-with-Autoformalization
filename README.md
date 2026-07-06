@@ -47,9 +47,9 @@ graph TD
 
 ---
 
-## 📋 3. Hackathon Evaluation Rubric Mapping
+## 📋 3. key concepts from the course used in the Capstone Project 
 
-This project demonstrates the key concepts required under the Capstone Project evaluation criteria:
+This project demonstrates the key concepts from the course:
 
 | Rubric Concept | Where to Find in Code / Demo |
 | :--- | :--- |
