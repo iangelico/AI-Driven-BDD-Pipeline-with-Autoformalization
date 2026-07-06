@@ -1,4 +1,4 @@
-# 🚀 AI-Driven BDD Pipeline
+# 🚀 AI-Driven BDD Pipeline with Autoformalization
 > **An AI agent pipeline that turns business requirements into compiler-checked Gherkin tests before defects reach production.**
 
 Ambiguous business requirements and logic gaps create costly software defects. This multi-agent pipeline catches requirement defects *before* any code is written, translating natural language user stories into compiler-checked Gherkin Cucumber tests. 
