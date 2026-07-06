@@ -47,7 +47,7 @@ graph TD
 
 ---
 
-## 📋 3. key concepts from the course used in the Capstone Project 
+## 📋 3. Key concepts from the course used in the Capstone Project 
 
 This project demonstrates the key concepts from the course:
 
